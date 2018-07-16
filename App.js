@@ -1,49 +1,45 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- */
-
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View} from 'react-native';
+// 1: 取得したバーコードを表示するためにAlertを利用
+import { View, Alert } from 'react-native';
+// 2: react-native-cameraからRNCameraを利用
+import { RNCamera } from 'react-native-camera';
 
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
-  android:
-    'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
-});
-
-type Props = {};
 export default class App extends Component<Props> {
+
+  constructor(props) {
+    super(props)
+    // 3: バーコードの情報を表示中かどうかを表すフラグを設定
+    this.state = {
+      showBarcode: false
+    }
+  }
+
+  // 4: バーコードの情報を受け取るイベント
+  onBarCodeRead = (obj) => {
+    // 5: バーコードの情報を表示中でなければ表示を行う
+    if (!this.state.showBarcode) {
+      this.setState({showBarcode: true})
+      Alert.alert(
+        'バーコード',
+        obj.data,
+        [
+          {text: "閉じる", onPress: () => {this.setState({showBarcode: false})}}
+        ]
+      )
+    }
+  }
+
   render() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>Welcome to React Native!</Text>
-        <Text style={styles.instructions}>To get started, edit App.js</Text>
-        <Text style={styles.instructions}>{instructions}</Text>
+      <View style={{flex: 1}}>
+        { /* 6: RNCameraの設定 */ }
+        <RNCamera
+          style={{flex: 1}}
+          permissionDialogTitle={'Permission to use camera'}
+          permissionDialogMessage={'We need your permission to use your camera phone'}
+          onBarCodeRead={this.onBarCodeRead}
+        />
       </View>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
