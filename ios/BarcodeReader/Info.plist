@@ -52,5 +52,7 @@
 			</dict>
 		</dict>
 	</dict>
+  <key>NSCameraUsageDescription</key>
+  <string>カメラを開いてよろしいでしょうか？</string>
 </dict>
 </plist>
